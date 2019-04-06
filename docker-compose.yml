@@ -86,6 +86,20 @@ services:
         volumes:
             - /var/run/docker.sock:/tmp/docker.sock:ro
 
+    isvhsopen-monitor:
+        image: tyisi/url-to-mqtt
+        env_file:
+            - ./env/isvhsopen-monitor.env
+        links:
+            - mosquitto
+
+    laserbusy-monitor:
+        image: tyisi/url-to-mqtt
+        env_file:
+            - ./env/laserbusy-monitor.env
+        links:
+            - mosquitto
+
 secrets:
     grafana_admin_password:
         file: /var/containers/vhs-smartspace/secrets/grafana-admin-password
