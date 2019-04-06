@@ -102,6 +102,16 @@ services:
         links:
             - mosquitto:mosquitto
 
+    sip-monitor:
+        image: tyisi/sip-to-mqtt
+        env_file:
+            - ./env/sip-monitor.env
+        network_mode: bridge
+        ports:
+          - 5060:5060
+        links:
+            - mosquitto:mosquitto
+
 secrets:
     grafana_admin_password:
         file: /var/containers/vhs-smartspace/secrets/grafana-admin-password
