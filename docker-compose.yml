@@ -7,7 +7,7 @@ services:
             - ./env/homeassistant.env
         network_mode: bridge
         links:
-            - mosquitto
+            - mosquitto:mosquitto
         ports:
             - 8123:8123
         restart: always
@@ -49,7 +49,7 @@ services:
             - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/grafana_admin_password
         network_mode: bridge
         links:
-            - influxdb
+            - influxdb:influxdb
         volumes:
             - /var/containers/vhs-smartspace/data/grafana:/var/lib/grafana
 
@@ -59,7 +59,7 @@ services:
             - ./env/nodered.env
         network_mode: bridge
         links:
-            - mosquitto
+            - mosquitto:mosquitto
         ports:
             - 1880:1880
         volumes:
@@ -90,15 +90,17 @@ services:
         image: tyisi/url-to-mqtt
         env_file:
             - ./env/isvhsopen-monitor.env
+        network_mode: bridge
         links:
-            - mosquitto
+            - mosquitto:mosquitto
 
     laserbusy-monitor:
         image: tyisi/url-to-mqtt
         env_file:
             - ./env/laserbusy-monitor.env
+        network_mode: bridge
         links:
-            - mosquitto
+            - mosquitto:mosquitto
 
 secrets:
     grafana_admin_password:
