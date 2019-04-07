@@ -6,9 +6,9 @@ services:
             - ./env/mosquitto-hub.env
         network_mode: bridge
         volumes:
-            - /var/containers/vhs-smartspace/conf/mosquitto-hub/mosquitto.conf:/mosquitto/config/mosquitto.conf
-            - /var/containers/vhs-smartspace/data/mosquitto-hub:/mosquitto/data
-            - /var/containers/vhs-smartspace/logs/mosquitto-hub:/mosquitto/log
+            - ./conf/mosquitto-hub/mosquitto.conf:/mosquitto/config/mosquitto.conf
+            - ./data/mosquitto-hub:/mosquitto/data
+            - ./logs/mosquitto-hub:/mosquitto/log
 
     mosquitto-trust:
         image: eclipse-mosquitto
@@ -23,9 +23,9 @@ services:
             - "2883:1883"
             - "2901:9001"
         volumes:
-            - /var/containers/vhs-smartspace/conf/mosquitto-trust/mosquitto.conf:/mosquitto/config/mosquitto.conf
-            - /var/containers/vhs-smartspace/data/mosquitto-trust:/mosquitto/data
-            - /var/containers/vhs-smartspace/logs/mosquitto-trust:/mosquitto/log
+            - ./conf/mosquitto-trust/mosquitto.conf:/mosquitto/config/mosquitto.conf
+            - ./data/mosquitto-trust:/mosquitto/data
+            - ./logs/mosquitto-trust:/mosquitto/log
 
     mosquitto:
         image: eclipse-mosquitto
@@ -40,10 +40,10 @@ services:
             - "1883:1883"
             - "9001:9001"
         volumes:
-            - /var/containers/vhs-smartspace/conf/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
-            - /var/containers/vhs-smartspace/conf/mosquitto/acl_file:/mosquitto/config/acl_file
-            - /var/containers/vhs-smartspace/data/mosquitto:/mosquitto/data
-            - /var/containers/vhs-smartspace/logs/mosquitto:/mosquitto/log
+            - ./conf/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+            - ./conf/mosquitto/acl_file:/mosquitto/config/acl_file
+            - ./data/mosquitto:/mosquitto/data
+            - ./logs/mosquitto:/mosquitto/log
 
     grafana:
         image: grafana/grafana
@@ -55,10 +55,12 @@ services:
         links:
             - influxdb:influxdb
         volumes:
-            - /var/containers/vhs-smartspace/data/grafana:/var/lib/grafana
+            - ./data/grafana:/var/lib/grafana
 
     homeassistant:
         image: homeassistant/home-assistant
+        depends_on:
+            - mosquitto
         env_file:
             - ./env/homeassistant.env
         network_mode: bridge
@@ -68,7 +70,7 @@ services:
             - "8123:8123"
         restart: always
         volumes:
-            - /var/containers/vhs-smartspace/data/home-assistant:/config
+            - ./data/home-assistant:/config
             - /etc/localtime:/etc/localtime:ro
 
     influxdb:
@@ -81,8 +83,8 @@ services:
             - "8083:8083"
             - "2003:2003"
         volumes:
-            - /var/containers/vhs-smartspace/conf/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
-            - /var/containers/vhs-smartspace/data/influxdb:/var/lib/influxdb
+            - ./conf/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+            - ./data/influxdb:/var/lib/influxdb
 
     nodered:
         image: tyisi/node-red-docker-bootstrap
@@ -96,8 +98,8 @@ services:
         ports:
             - "1880:1880"
         volumes:
-            - /var/containers/vhs-smartspace/conf/nodered:/bootstrap/conf/
-            - /var/containers/vhs-smartspace/data/nodered:/data
+            - ./conf/nodered:/bootstrap/conf/
+            - ./data/nodered:/data
 
     portainer:
         image: portainer/portainer
@@ -108,7 +110,7 @@ services:
             - "9000:9000"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - /var/containers/vhs-smartspace/data/portainer:/data
+            - ./data/portainer:/data
 
     nginx-proxy:
         image: jwilder/nginx-proxy
@@ -153,4 +155,4 @@ services:
 
 secrets:
     grafana_admin_password:
-        file: /var/containers/vhs-smartspace/secrets/grafana-admin-password
+        file: ./secrets/grafana-admin-password
