@@ -1,19 +1,5 @@
 version: "3.7"
 services:
-    homeassistant:
-        image: homeassistant/home-assistant
-        env_file:
-            - ./env/homeassistant.env
-        network_mode: bridge
-        links:
-            - mosquitto:mosquitto
-        ports:
-            - "8123:8123"
-        restart: always
-        volumes:
-            - /var/containers/vhs-smartspace/data/home-assistant:/config
-            - /etc/localtime:/etc/localtime:ro
-
     mosquitto-hub:
         image: eclipse-mosquitto
         env_file:
@@ -26,6 +12,8 @@ services:
 
     mosquitto-trust:
         image: eclipse-mosquitto
+        depends_on:
+            - mosquitto-hub
         env_file:
             - ./env/mosquitto-trust.env
         network_mode: bridge
@@ -41,6 +29,8 @@ services:
 
     mosquitto:
         image: eclipse-mosquitto
+        depends_on:
+            - mosquitto-hub
         env_file:
             - ./env/mosquitto.env
         network_mode: bridge
@@ -51,8 +41,35 @@ services:
             - "9001:9001"
         volumes:
             - /var/containers/vhs-smartspace/conf/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+            - /var/containers/vhs-smartspace/conf/mosquitto/acl_file:/mosquitto/config/acl_file
             - /var/containers/vhs-smartspace/data/mosquitto:/mosquitto/data
             - /var/containers/vhs-smartspace/logs/mosquitto:/mosquitto/log
+
+    grafana:
+        image: grafana/grafana
+        env_file:
+            - ./env/grafana.env
+        environment:
+            - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/grafana_admin_password
+        network_mode: bridge
+        links:
+            - influxdb:influxdb
+        volumes:
+            - /var/containers/vhs-smartspace/data/grafana:/var/lib/grafana
+
+    homeassistant:
+        image: homeassistant/home-assistant
+        env_file:
+            - ./env/homeassistant.env
+        network_mode: bridge
+        links:
+            - mosquitto:mosquitto
+        ports:
+            - "8123:8123"
+        restart: always
+        volumes:
+            - /var/containers/vhs-smartspace/data/home-assistant:/config
+            - /etc/localtime:/etc/localtime:ro
 
     influxdb:
         image: influxdb
@@ -67,20 +84,10 @@ services:
             - /var/containers/vhs-smartspace/conf/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
             - /var/containers/vhs-smartspace/data/influxdb:/var/lib/influxdb
 
-    grafana:
-        image: grafana/grafana
-        env_file:
-            - ./env/grafana.env
-        environment:
-            - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/grafana_admin_password
-        network_mode: bridge
-        links:
-            - influxdb:influxdb
-        volumes:
-            - /var/containers/vhs-smartspace/data/grafana:/var/lib/grafana
-
     nodered:
         image: tyisi/node-red-docker-bootstrap
+        depends_on:
+            - mosquitto
         env_file:
             - ./env/nodered.env
         network_mode: bridge
@@ -114,6 +121,8 @@ services:
 
     isvhsopen-monitor:
         image: tyisi/url-to-mqtt
+        depends_on:
+            - mosquitto-trust
         env_file:
             - ./env/isvhsopen-monitor.env
         network_mode: bridge
@@ -122,6 +131,8 @@ services:
 
     laserbusy-monitor:
         image: tyisi/url-to-mqtt
+        depends_on:
+            - mosquitto-trust
         env_file:
             - ./env/laserbusy-monitor.env
         network_mode: bridge
@@ -130,6 +141,8 @@ services:
 
     sip-monitor:
         image: tyisi/sip-to-mqtt
+        depends_on:
+            - mosquitto-trust
         env_file:
             - ./env/sip-monitor.env
         network_mode: bridge
