@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BASEDIR="$(dirname $0)/$(if [ "$(find $0 -type l)" != "" ] ; then dirname $(find $0 -printf '%l') ; fi)"
+BASEDIR="$( cd $(dirname $0)/$(if [ "$(find $0 -type l)" != "" ]; then dirname $(find $0 -printf '%l'); fi) ; pwd )"
 
 cd "$BASEDIR"
 
