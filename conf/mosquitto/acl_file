@@ -1,0 +1,3 @@
+topic read /events/#
+topic read /status/#
+topic write /test/#

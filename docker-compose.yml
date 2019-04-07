@@ -1,7 +1,6 @@
 version: "3.7"
 services:
     homeassistant:
-        container_name: home-assistant
         image: homeassistant/home-assistant
         env_file:
             - ./env/homeassistant.env
@@ -9,20 +8,47 @@ services:
         links:
             - mosquitto:mosquitto
         ports:
-            - 8123:8123
+            - "8123:8123"
         restart: always
         volumes:
             - /var/containers/vhs-smartspace/data/home-assistant:/config
             - /etc/localtime:/etc/localtime:ro
+
+    mosquitto-hub:
+        image: eclipse-mosquitto
+        env_file:
+            - ./env/mosquitto-hub.env
+        network_mode: bridge
+        volumes:
+            - /var/containers/vhs-smartspace/conf/mosquitto-hub/mosquitto.conf:/mosquitto/config/mosquitto.conf
+            - /var/containers/vhs-smartspace/data/mosquitto-hub:/mosquitto/data
+            - /var/containers/vhs-smartspace/logs/mosquitto-hub:/mosquitto/log
+
+    mosquitto-trust:
+        image: eclipse-mosquitto
+        env_file:
+            - ./env/mosquitto-trust.env
+        network_mode: bridge
+        links:
+            - mosquitto-hub:mosquitto-hub
+        ports:
+            - "2883:1883"
+            - "2901:9001"
+        volumes:
+            - /var/containers/vhs-smartspace/conf/mosquitto-trust/mosquitto.conf:/mosquitto/config/mosquitto.conf
+            - /var/containers/vhs-smartspace/data/mosquitto-trust:/mosquitto/data
+            - /var/containers/vhs-smartspace/logs/mosquitto-trust:/mosquitto/log
 
     mosquitto:
         image: eclipse-mosquitto
         env_file:
             - ./env/mosquitto.env
         network_mode: bridge
+        links:
+            - mosquitto-hub:mosquitto-hub
         ports:
-            - 1883:1883
-            - 9001:9001
+            - "1883:1883"
+            - "9001:9001"
         volumes:
             - /var/containers/vhs-smartspace/conf/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
             - /var/containers/vhs-smartspace/data/mosquitto:/mosquitto/data
@@ -34,9 +60,9 @@ services:
             - ./env/influxdb.env
         network_mode: bridge
         ports:
-            - 8086:8086
-            - 8083:8083
-            - 2003:2003
+            - "8086:8086"
+            - "8083:8083"
+            - "2003:2003"
         volumes:
             - /var/containers/vhs-smartspace/conf/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
             - /var/containers/vhs-smartspace/data/influxdb:/var/lib/influxdb
@@ -61,7 +87,7 @@ services:
         links:
             - mosquitto:mosquitto
         ports:
-            - 1880:1880
+            - "1880:1880"
         volumes:
             - /var/containers/vhs-smartspace/conf/nodered:/bootstrap/conf/
             - /var/containers/vhs-smartspace/data/nodered:/data
@@ -72,7 +98,7 @@ services:
             - ./env/portainer.env
         network_mode: bridge
         ports:
-            - 9000:9000
+            - "9000:9000"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - /var/containers/vhs-smartspace/data/portainer:/data
@@ -81,8 +107,8 @@ services:
         image: jwilder/nginx-proxy
         network_mode: bridge
         ports:
-            - 80:80
-            - 443:443
+            - "80:80"
+            - "443:443"
         volumes:
             - /var/run/docker.sock:/tmp/docker.sock:ro
 
@@ -92,7 +118,7 @@ services:
             - ./env/isvhsopen-monitor.env
         network_mode: bridge
         links:
-            - mosquitto:mosquitto
+            - mosquitto-trust:mosquitto
 
     laserbusy-monitor:
         image: tyisi/url-to-mqtt
@@ -100,7 +126,7 @@ services:
             - ./env/laserbusy-monitor.env
         network_mode: bridge
         links:
-            - mosquitto:mosquitto
+            - mosquitto-trust:mosquitto
 
     sip-monitor:
         image: tyisi/sip-to-mqtt
@@ -108,9 +134,9 @@ services:
             - ./env/sip-monitor.env
         network_mode: bridge
         ports:
-          - 5060:5060
+          - "5060:5060"
         links:
-            - mosquitto:mosquitto
+            - mosquitto-trust:mosquitto
 
 secrets:
     grafana_admin_password:
