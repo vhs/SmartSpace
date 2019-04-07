@@ -1,5 +1,9 @@
 #!/bin/sh
 
+BASEDIR="$(dirname $0)/$(if [ "$(find $0 -type l)" != "" ] ; then dirname $(find $0 -printf '%l') ; fi)"
+
+cd "$BASEDIR"
+
 echo "Copying missing .env files"
 find env -type f -name '*.sample.env' | while read sampleenv; do
     envfile=$(echo "$sampleenv" | sed 's/\.sample\.env/.env/g')
