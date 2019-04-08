@@ -121,6 +121,16 @@ services:
         volumes:
             - /var/run/docker.sock:/tmp/docker.sock:ro
 
+    sergeant:
+        image: vanhack/smartspace-sergeant
+        depends_on:
+            - mosquitto-trust
+        env_file:
+            - ./env/sergeant.env
+        network_mode: bridge
+        links:
+            - mosquitto-trust:mosquitto
+
     isvhsopen-monitor:
         image: tyisi/url-to-mqtt
         depends_on:
