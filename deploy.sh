@@ -4,6 +4,9 @@ BASEDIR="$( cd $(dirname $0)/$(if [ "$(find $0 -type l)" != "" ]; then dirname $
 
 cd "$BASEDIR"
 
+echo "Updating submodules..."
+git submodule update --init --recursive
+
 echo "Copying missing .env files"
 find env -type f -name '*.sample.env' | while read sampleenv; do
     envfile=$(echo "$sampleenv" | sed 's/\.sample\.env/.env/g')
@@ -14,4 +17,4 @@ find env -type f -name '*.sample.env' | while read sampleenv; do
 done
 
 echo "Updating containers..."
-docker-compose up --remove-orphans -d
+docker-compose pull && docker-compose up --remove-orphans -d

@@ -163,6 +163,21 @@ services:
         links:
             - mosquitto-trust:mosquitto
 
+    spacebus:
+        image: nginx
+        depends_on:
+            - mosquitto
+        env_file:
+            - ./env/spacebus.env
+        network_mode: bridge
+        ports:
+          - "5060:5060"
+        links:
+            - mosquitto:mosquitto
+        volumes:
+            - ./data/spacebus:/usr/share/nginx/html:ro
+            - ./conf/spacebus/config.js:/usr/share/nginx/html/js/config.js:ro
+
 secrets:
     grafana_admin_password:
         file: ./secrets/grafana-admin-password
