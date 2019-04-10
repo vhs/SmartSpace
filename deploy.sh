@@ -17,4 +17,5 @@ find env -type f -name '*.sample.env' | while read sampleenv; do
 done
 
 echo "Updating containers..."
-docker-compose pull && docker-compose up --remove-orphans -d
+docker-compose pull
+docker-compose up --remove-orphans -d
