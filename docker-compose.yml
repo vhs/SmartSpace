@@ -173,8 +173,8 @@ services:
         links:
             - mosquitto:mosquitto
         volumes:
-            - ./data/spacebus:/usr/share/nginx/html:ro
-            - ./conf/spacebus/config.js:/usr/share/nginx/html/js/config.js:ro
+            - ./data/spacebus:/usr/share/nginx/html
+            - ./conf/spacebus/config.js:/usr/share/nginx/html/js/config.js
 
 secrets:
     grafana_admin_password:
