@@ -170,8 +170,6 @@ services:
         env_file:
             - ./env/spacebus.env
         network_mode: bridge
-        ports:
-          - "5060:5060"
         links:
             - mosquitto:mosquitto
         volumes:
