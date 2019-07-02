@@ -4,6 +4,8 @@ BASEDIR="$( cd $(dirname $0)/$(if [ "$(find $0 -type l)" != "" ]; then dirname $
 
 cd "$BASEDIR"
 
+echo "Deploying vhs-smartspace..."
+
 echo "Updating submodules..."
 git submodule update --init --recursive
 
@@ -19,3 +21,6 @@ done
 echo "Updating containers..."
 docker-compose pull
 docker-compose up --remove-orphans -d
+
+echo ""
+echo "Done!"
