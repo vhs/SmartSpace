@@ -1,26 +1,25 @@
 #!/bin/sh
 
-BASEDIR="$( cd $(dirname $0)/$(if [ "$(find $0 -type l)" != "" ]; then dirname $(find $0 -printf '%l'); fi) ; pwd )"
+BASEDIR="$(cd $(dirname $0)/$(if [ "$(find $0 -type l)" != "" ]; then dirname $(find $0 -printf '%l'); fi) ; pwd)"
 
 cd "$BASEDIR"
 
-echo "Deploying vhs-smartspace..."
+echo "$(date): Deploying vhs-smartspace..."
 
-echo "Updating submodules..."
-git submodule update --init --recursive
+echo "$(date): Updating submodules..."
+git submodule update --init --recursive 2>&1 | while read logline ; do echo "$(date): $logline" ; done
 
-echo "Copying missing .env files"
+echo "$(date): Copying missing .env files"
 find env -type f -name '*.sample.env' | while read sampleenv; do
-    envfile=$(echo "$sampleenv" | sed 's/\.sample\.env/.env/g')
-    if [ ! -f "$envfile" ]; then
-        echo "Copying $sampleenv to $envfile"
-        cp "$sampleenv" "$envfile"
-    fi
+        envfile=$(echo "$sampleenv" | sed 's/\.sample\.env/.env/g')
+        if [ ! -f "$envfile" ]; then
+                echo "$(date): Copying $sampleenv to $envfile"
+                cp "$sampleenv" "$envfile"
+        fi
 done
 
-echo "Updating containers..."
-docker-compose pull
-docker-compose up --remove-orphans -d
+echo "$(date): Updating containers..."
+docker-compose pull 2>&1 | while read logline ; do echo "$(date): $logline" ; done
+docker-compose up --remove-orphans -d 2>&1 | while read logline ; do echo "$(date): $logline" ; done
 
-echo ""
-echo "Done!"
+echo "$(date): Done!"
