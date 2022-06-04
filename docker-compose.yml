@@ -1,24 +1,24 @@
 version: "3.7"
 services:
     mosquitto-hub:
-        image: eclipse-mosquitto
+        image: eclipse-mosquitto:2.0
+        container_name: mosquitto-hub
+        expose:
+            - 1883
         env_file:
             - ./env/mosquitto-hub.env
-        network_mode: bridge
         volumes:
             - ./conf/mosquitto-hub/mosquitto.conf:/mosquitto/config/mosquitto.conf
             - ./data/mosquitto-hub:/mosquitto/data
             - ./logs/mosquitto-hub:/mosquitto/log
 
     mosquitto-trust:
-        image: eclipse-mosquitto
+        image: eclipse-mosquitto:2.0
+        container_name: mosquitto-trust
         depends_on:
             - mosquitto-hub
         env_file:
             - ./env/mosquitto-trust.env
-        network_mode: bridge
-        links:
-            - mosquitto-hub:mosquitto-hub
         ports:
             - "2883:1883"
             - "2901:9001"
@@ -27,23 +27,21 @@ services:
             - ./data/mosquitto-trust:/mosquitto/data
             - ./logs/mosquitto-trust:/mosquitto/log
 
-    mosquitto:
-        image: eclipse-mosquitto
+    mosquitto-public:
+        image: eclipse-mosquitto:2.0
+        container_name: mosquitto-public
         depends_on:
             - mosquitto-hub
         env_file:
-            - ./env/mosquitto.env
-        network_mode: bridge
-        links:
-            - mosquitto-hub:mosquitto-hub
+            - ./env/mosquitto-public.env
         ports:
             - "1883:1883"
             - "9001:9001"
         volumes:
-            - ./conf/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
-            - ./conf/mosquitto/acl_file:/mosquitto/config/acl_file
-            - ./data/mosquitto:/mosquitto/data
-            - ./logs/mosquitto:/mosquitto/log
+            - ./conf/mosquitto-public/mosquitto.conf:/mosquitto/config/mosquitto.conf
+            - ./conf/mosquitto-public/acl_file:/mosquitto/config/acl_file
+            - ./data/mosquitto-public:/mosquitto/data
+            - ./logs/mosquitto-public:/mosquitto/log
 
     grafana:
         image: grafana/grafana
@@ -51,21 +49,15 @@ services:
             - ./env/grafana.env
         environment:
             - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/grafana_admin_password
-        network_mode: bridge
-        links:
-            - influxdb:influxdb
         volumes:
             - ./data/grafana:/var/lib/grafana
 
     homeassistant:
         image: homeassistant/home-assistant
         depends_on:
-            - mosquitto
+            - mosquitto-trust
         env_file:
             - ./env/homeassistant.env
-        network_mode: bridge
-        links:
-            - mosquitto:mosquitto
         ports:
             - "8123:8123"
         restart: always
@@ -77,7 +69,6 @@ services:
         image: influxdb
         env_file:
             - ./env/influxdb.env
-        network_mode: bridge
         ports:
             - "8086:8086"
             - "8083:8083"
@@ -89,12 +80,9 @@ services:
     nodered:
         image: tyisi/node-red-docker-bootstrap
         depends_on:
-            - mosquitto
+            - mosquitto-trust
         env_file:
             - ./env/nodered.env
-        network_mode: bridge
-        links:
-            - mosquitto:mosquitto
         ports:
             - "1880:1880"
         volumes:
@@ -105,7 +93,6 @@ services:
         image: portainer/portainer
         env_file:
             - ./env/portainer.env
-        network_mode: bridge
         ports:
             - "9000:9000"
         volumes:
@@ -114,7 +101,6 @@ services:
 
     nginx-proxy:
         image: jwilder/nginx-proxy
-        network_mode: bridge
         ports:
             - "80:80"
             - "443:443"
@@ -127,9 +113,6 @@ services:
             - mosquitto-trust
         env_file:
             - ./env/sergeant.env
-        network_mode: bridge
-        links:
-            - mosquitto-trust:mosquitto
 
     isvhsopen-monitor:
         image: tyisi/url-to-mqtt
@@ -137,9 +120,6 @@ services:
             - mosquitto-trust
         env_file:
             - ./env/isvhsopen-monitor.env
-        network_mode: bridge
-        links:
-            - mosquitto-trust:mosquitto
 
     laserbusy-monitor:
         image: tyisi/url-to-mqtt
@@ -147,9 +127,6 @@ services:
             - mosquitto-trust
         env_file:
             - ./env/laserbusy-monitor.env
-        network_mode: bridge
-        links:
-            - mosquitto-trust:mosquitto
 
     sip-monitor:
         image: tyisi/sip-to-mqtt
@@ -157,21 +134,15 @@ services:
             - mosquitto-trust
         env_file:
             - ./env/sip-monitor.env
-        network_mode: bridge
         ports:
-          - "5060:5060"
-        links:
-            - mosquitto-trust:mosquitto
+            - "5060:5060"
 
     spacebus:
         image: nginx
         depends_on:
-            - mosquitto
+            - mosquitto-public
         env_file:
             - ./env/spacebus.env
-        network_mode: bridge
-        links:
-            - mosquitto:mosquitto
         volumes:
             - ./data/spacebus:/usr/share/nginx/html
             - ./conf/spacebus/config.js:/usr/share/nginx/html/js/config.js
