@@ -1,10 +1,12 @@
 version: "3.7"
+
 services:
     mosquitto-hub:
         image: eclipse-mosquitto:2.0
         container_name: mosquitto-hub
-        expose:
-            - 1883
+        restart: unless-stopped
+        networks:
+            - mosquitto
         env_file:
             - ./env/mosquitto-hub.env
         volumes:
@@ -17,11 +19,12 @@ services:
         container_name: mosquitto-trust
         depends_on:
             - mosquitto-hub
+        restart: unless-stopped
+        networks:
+            - default
+            - mosquitto
         env_file:
             - ./env/mosquitto-trust.env
-        ports:
-            - "2883:1883"
-            - "2901:9001"
         volumes:
             - ./conf/mosquitto-trust/mosquitto.conf:/mosquitto/config/mosquitto.conf
             - ./data/mosquitto-trust:/mosquitto/data
@@ -32,11 +35,15 @@ services:
         container_name: mosquitto-public
         depends_on:
             - mosquitto-hub
-        env_file:
-            - ./env/mosquitto-public.env
+        restart: unless-stopped
+        networks:
+            - default
+            - mosquitto
         ports:
             - "1883:1883"
             - "9001:9001"
+        env_file:
+            - ./env/mosquitto-public.env
         volumes:
             - ./conf/mosquitto-public/mosquitto.conf:/mosquitto/config/mosquitto.conf
             - ./conf/mosquitto-public/acl_file:/mosquitto/config/acl_file
@@ -45,6 +52,11 @@ services:
 
     grafana:
         image: grafana/grafana
+        depends_on:
+            - influxdb
+        restart: unless-stopped
+        networks:
+            - default
         env_file:
             - ./env/grafana.env
         environment:
@@ -56,23 +68,29 @@ services:
         image: homeassistant/home-assistant
         depends_on:
             - mosquitto-trust
-        env_file:
-            - ./env/homeassistant.env
+            - influxdb
+        restart: unless-stopped
+        networks:
+            - default
         ports:
             - "8123:8123"
-        restart: always
+        env_file:
+            - ./env/homeassistant.env
         volumes:
             - ./data/home-assistant:/config
             - /etc/localtime:/etc/localtime:ro
 
     influxdb:
         image: influxdb
-        env_file:
-            - ./env/influxdb.env
+        restart: unless-stopped
+        networks:
+            - default
         ports:
             - "8086:8086"
             - "8083:8083"
             - "2003:2003"
+        env_file:
+            - ./env/influxdb.env
         volumes:
             - ./conf/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
             - ./data/influxdb:/var/lib/influxdb
@@ -81,26 +99,35 @@ services:
         image: tyisi/node-red-docker-bootstrap
         depends_on:
             - mosquitto-trust
-        env_file:
-            - ./env/nodered.env
+        restart: unless-stopped
+        networks:
+            - default
         ports:
             - "1880:1880"
+        env_file:
+            - ./env/nodered.env
         volumes:
             - ./conf/nodered:/bootstrap/conf/
             - ./data/nodered:/data
 
     portainer:
         image: portainer/portainer
-        env_file:
-            - ./env/portainer.env
+        restart: unless-stopped
+        networks:
+            - default
         ports:
             - "9000:9000"
+        env_file:
+            - ./env/portainer.env
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./data/portainer:/data
 
     nginx-proxy:
         image: jwilder/nginx-proxy
+        restart: unless-stopped
+        networks:
+            - default
         ports:
             - "80:80"
             - "443:443"
@@ -111,6 +138,9 @@ services:
         image: vanhack/smartspace-sergeant
         depends_on:
             - mosquitto-trust
+        restart: unless-stopped
+        networks:
+            - default
         env_file:
             - ./env/sergeant.env
 
@@ -118,6 +148,9 @@ services:
         image: tyisi/url-to-mqtt
         depends_on:
             - mosquitto-trust
+        restart: unless-stopped
+        networks:
+            - default
         env_file:
             - ./env/isvhsopen-monitor.env
 
@@ -125,6 +158,9 @@ services:
         image: tyisi/url-to-mqtt
         depends_on:
             - mosquitto-trust
+        restart: unless-stopped
+        networks:
+            - default
         env_file:
             - ./env/laserbusy-monitor.env
 
@@ -132,15 +168,21 @@ services:
         image: tyisi/sip-to-mqtt
         depends_on:
             - mosquitto-trust
-        env_file:
-            - ./env/sip-monitor.env
+        restart: unless-stopped
+        networks:
+            - default
         ports:
             - "5060:5060"
+        env_file:
+            - ./env/sip-monitor.env
 
     spacebus:
         image: vanhack/spacebus
         depends_on:
             - mosquitto-public
+        restart: unless-stopped
+        networks:
+            - default
         env_file:
             - ./env/spacebus.env
         volumes:
@@ -150,8 +192,17 @@ services:
         image: vanhack/easyappointments-category-monitor
         depends_on:
             - mosquitto-trust
+        restart: unless-stopped
+        networks:
+            - default
         volumes:
             - ./conf/easyappointments-mask-monitor/config.json:/app/config.json:ro
+
+networks:
+    default:
+        driver: bridge
+    mosquitto:
+        driver: bridge
 
 secrets:
     grafana_admin_password:
