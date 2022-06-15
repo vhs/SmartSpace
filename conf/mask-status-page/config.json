@@ -1,0 +1,22 @@
+{
+    "title": "Mask Status Page",
+    "mqttUri": "ws://spacebus.venables.vanhack.ca:9001/mqtt",
+    "mqttTopic": "/status/space/mask",
+    "presets": {
+        "mandatory": {
+            "message": "Masks Are Mandatory",
+            "backgroundColor": "red",
+            "foregroundColor": "white"
+        },
+        "recommended": {
+            "message": "Masks Are Recommended",
+            "backgroundColor": "orange",
+            "foregroundColor": "black"
+        },
+        "default": {
+            "message": "Waiting for server response",
+            "backgroundColor": "grey",
+            "foregroundColor": "black"
+        }
+    }
+}

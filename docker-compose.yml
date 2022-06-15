@@ -177,7 +177,7 @@ services:
             - ./env/sip-monitor.env
 
     spacebus:
-        image: vanhack/spacebus
+        image: vanhack/spacebus:latest
         depends_on:
             - mosquitto-public
         restart: unless-stopped
@@ -187,6 +187,18 @@ services:
             - ./env/spacebus.env
         volumes:
             - ./conf/spacebus/config.json:/usr/share/nginx/html/config.json:ro
+
+    mask-status-page:
+        image: vanhack/mqtt-status-page:latest
+        depends_on:
+            - mosquitto-public
+        restart: unless-stopped
+        networks:
+            - default
+        env_file:
+            - ./env/mask-status-page.env
+        volumes:
+            - ./conf/mask-status-page/config.json:/usr/share/nginx/html/config.json:ro
 
     easyappointments-mask-monitor:
         image: vanhack/easyappointments-category-monitor
