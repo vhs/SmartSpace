@@ -1,0 +1,9 @@
+{
+    "baseUrl": "https://booking.devtest.vanhack.ca/index.php/api/v1",
+    "apiKey": "SUPERSECRETAPIKEY",
+    "categoryId": 1,
+    "activeValue": "mandatory",
+    "inactiveValue": "recommended",
+    "mqttHost": "mosquitto-trust",
+    "mqttTopic": "/spacebus/status/space/mask"
+}

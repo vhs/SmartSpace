@@ -1,0 +1,6 @@
+{
+    "title": "SpaceBus Dashboard",
+    "mqttUri": "ws://spacebus.venables.vanhack.ca:9001/mqtt",
+    "mqttTopic": "/#",
+    "tableUpdateInterval": "5000"
+}

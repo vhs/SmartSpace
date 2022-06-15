@@ -138,14 +138,20 @@ services:
             - "5060:5060"
 
     spacebus:
-        image: nginx
+        image: vanhack/spacebus
         depends_on:
             - mosquitto-public
         env_file:
             - ./env/spacebus.env
         volumes:
-            - ./data/spacebus:/usr/share/nginx/html
-            - ./conf/spacebus/config.js:/usr/share/nginx/html/js/config.js
+            - ./conf/spacebus/config.json:/usr/share/nginx/html/config.json:ro
+
+    easyappointments-mask-monitor:
+        image: vanhack/easyappointments-category-monitor
+        depends_on:
+            - mosquitto-trust
+        volumes:
+            - ./conf/easyappointments-mask-monitor/config.json:/app/config.json:ro
 
 secrets:
     grafana_admin_password:
