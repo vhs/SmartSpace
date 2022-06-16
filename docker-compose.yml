@@ -219,8 +219,6 @@ services:
             - default
         env_file:
             - ./env/mask-override-page.env
-        volumes:
-            - ./conf/mask-override-page/next.config.js:/app/next.config.js:ro
 
 networks:
     default:
