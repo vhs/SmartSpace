@@ -1,5 +1,6 @@
 data/*/**
 env/*
+!env/*.sample.env
 logs/*/**
 secrets/**
 data/spacebus/**
