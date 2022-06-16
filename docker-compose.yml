@@ -23,7 +23,7 @@ services:
         networks:
             - default
             - mosquitto
-        exposes:
+        expose:
             - 1883
             - 9001
         env_file:
