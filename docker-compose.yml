@@ -210,6 +210,18 @@ services:
         volumes:
             - ./conf/easyappointments-mask-monitor/config.json:/app/config.json:ro
 
+    mask-override-page:
+        image: vanhack/mqtt-web-timer:latest
+        depends_on:
+            - mosquitto-trust
+        restart: unless-stopped
+        networks:
+            - default
+        env_file:
+            - ./env/mask-override-page.env
+        volumes:
+            - ./conf/mask-override-page/next.config.js:/app/next.config.js:ro
+
 networks:
     default:
         driver: bridge
