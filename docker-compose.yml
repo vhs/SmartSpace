@@ -23,6 +23,9 @@ services:
         networks:
             - default
             - mosquitto
+        exposes:
+            - 1883
+            - 9001
         env_file:
             - ./env/mosquitto-trust.env
         volumes:
