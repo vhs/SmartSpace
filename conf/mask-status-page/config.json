@@ -1,7 +1,8 @@
 {
     "title": "Mask Status Page",
-    "mqttUri": "ws://spacebus.venables.vanhack.ca:9001/mqtt",
-    "mqttTopic": "/status/space/mask",
+    "mqttUri": "wss://mqtt-websocket.venables.vanhack.ca:9002/mqtt",
+    "mqttControlTopic": "/devices/mask-status-page/control",
+    "mqttStatusTopic": "/status/space/mask",
     "presets": {
         "mandatory": {
             "message": "Masks Are Mandatory",
