@@ -1,3 +1,4 @@
+topic read /devices/#
 topic read /events/#
 topic read /status/#
 topic read /test/#
