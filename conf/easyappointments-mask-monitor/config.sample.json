@@ -4,6 +4,10 @@
     "categoryId": 1,
     "activeValue": "mandatory",
     "inactiveValue": "recommended",
+    "mqttProtocol": "tcp",
     "mqttHost": "mosquitto-trust",
-    "mqttTopic": "/spacebus/status/space/mask"
+    "mqttPort": "1883",
+    "mqttServiceTopic": "/status/service/easyappointments-mask-schedule-monitor",
+    "mqttStatusTopic": "/status/space/mask",
+    "mqttOverrideTopic": "/status/space/mask-override"
 }
