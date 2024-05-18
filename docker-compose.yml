@@ -4,7 +4,7 @@ services:
     mosquitto-hub:
         image: eclipse-mosquitto:2.0
         container_name: mosquitto-hub
-        restart: unless-stopped
+        restart: always
         networks:
             - mosquitto
         env_file:
@@ -19,7 +19,7 @@ services:
         container_name: mosquitto-trust
         depends_on:
             - mosquitto-hub
-        restart: unless-stopped
+        restart: always
         networks:
             - default
             - mosquitto
@@ -38,7 +38,7 @@ services:
         container_name: mosquitto-public
         depends_on:
             - mosquitto-hub
-        restart: unless-stopped
+        restart: always
         networks:
             - default
             - mosquitto
@@ -57,7 +57,7 @@ services:
         image: grafana/grafana
         depends_on:
             - influxdb
-        restart: unless-stopped
+        restart: always
         networks:
             - default
         env_file:
@@ -72,7 +72,7 @@ services:
         depends_on:
             - mosquitto-trust
             - influxdb
-        restart: unless-stopped
+        restart: always
         networks:
             - default
         ports:
@@ -85,7 +85,7 @@ services:
 
     influxdb:
         image: influxdb:2.3
-        restart: unless-stopped
+        restart: always
         networks:
             - default
         ports:
@@ -102,7 +102,7 @@ services:
         image: tyisi/node-red-docker-bootstrap
         depends_on:
             - mosquitto-trust
-        restart: unless-stopped
+        restart: always
         networks:
             - default
         ports:
@@ -115,7 +115,7 @@ services:
 
     portainer:
         image: portainer/portainer
-        restart: unless-stopped
+        restart: always
         networks:
             - default
         ports:
@@ -128,7 +128,7 @@ services:
 
     nginx-proxy:
         image: jwilder/nginx-proxy
-        restart: unless-stopped
+        restart: always
         networks:
             - default
         ports:
@@ -141,7 +141,7 @@ services:
         image: vanhack/smartspace-sergeant
         depends_on:
             - mosquitto-trust
-        restart: unless-stopped
+        restart: always
         networks:
             - default
         env_file:
@@ -151,7 +151,7 @@ services:
         image: tyisi/url-to-mqtt
         depends_on:
             - mosquitto-trust
-        restart: unless-stopped
+        restart: always
         networks:
             - default
         env_file:
@@ -161,7 +161,7 @@ services:
         image: tyisi/url-to-mqtt
         depends_on:
             - mosquitto-trust
-        restart: unless-stopped
+        restart: always
         networks:
             - default
         env_file:
@@ -171,7 +171,7 @@ services:
         image: tyisi/sip-to-mqtt
         depends_on:
             - mosquitto-trust
-        restart: unless-stopped
+        restart: always
         networks:
             - default
         ports:
@@ -183,7 +183,7 @@ services:
         image: vanhack/spacebus:latest
         depends_on:
             - mosquitto-public
-        restart: unless-stopped
+        restart: always
         networks:
             - default
         env_file:
@@ -195,7 +195,7 @@ services:
         image: vanhack/mqtt-status-page:latest
         depends_on:
             - mosquitto-public
-        restart: unless-stopped
+        restart: always
         networks:
             - default
         env_file:
@@ -207,7 +207,7 @@ services:
         image: vanhack/easyappointments-category-monitor
         depends_on:
             - mosquitto-trust
-        restart: unless-stopped
+        restart: always
         networks:
             - default
         volumes:
@@ -217,7 +217,7 @@ services:
         image: vanhack/mqtt-web-timer:latest
         depends_on:
             - mosquitto-trust
-        restart: unless-stopped
+        restart: always
         networks:
             - default
         env_file:
