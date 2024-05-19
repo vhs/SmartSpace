@@ -5,3 +5,11 @@ topic read /projects/#
 topic write /projects/#
 topic read /test/#
 topic write /test/#
+
+topic read devices/#
+topic read events/#
+topic read status/#
+topic read projects/#
+topic write projects/#
+topic read test/#
+topic write test/#
