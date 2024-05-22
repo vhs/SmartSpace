@@ -1,1 +1,3 @@
-config.json
+*
+!.gitignore
+!config.sample.json
