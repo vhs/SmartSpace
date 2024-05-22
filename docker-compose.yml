@@ -64,6 +64,8 @@ services:
             - ./env/grafana.env
         environment:
             - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/grafana_admin_password
+        secrets:
+            - grafana_admin_password
         volumes:
             - ./data/grafana:/var/lib/grafana
 
