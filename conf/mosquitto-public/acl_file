@@ -6,10 +6,7 @@ topic write /projects/#
 topic read /test/#
 topic write /test/#
 
-topic read devices/#
-topic read events/#
-topic read status/#
-topic read projects/#
-topic write projects/#
-topic read test/#
-topic write test/#
+topic deny /projects/woodshopdustplc/Main_tableE01E41/INFO2
+topic deny /projects/woodshopdustplc/Meow_Couch_15C1A5/INFO2
+topic deny /projects/woodshopdustplc/meow_woodshop_D389D0/INFO2
+topic deny /projects/woodshopdustplc/Tasmota_electronics_DFCC78/INFO2
