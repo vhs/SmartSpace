@@ -2,7 +2,7 @@
 
 cd "$(dirname "$(realpath "$0")")/../" || exit 255
 
-if [ "$(find env -type f -name '*.sample.env' | wc -l)" != "$(find env -type f -name '*.env' | egrep -vw sample | wc -l)" ]; then
+if [ "$(find env -type f -name '*.sample.env' | wc -l)" != "$(find env -type f -name '*.env' | grep -E -c -vw sample)" ]; then
     echo "$(date): Copying missing .env files"
     find env -type f -name '*.sample.env' | while read -r SAMPLEENV; do
         ENVFILE=$(echo "${SAMPLEENV}" | sed 's/\.sample\.env/.env/g')
