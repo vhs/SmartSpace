@@ -1,0 +1,12 @@
+services:
+    mask-override-page:
+        image: vanhack/mqtt-web-timer:latest
+        depends_on:
+            - mosquitto-trust
+        restart: always
+        networks:
+            - default
+        env_file:
+            - ./env/mask-override-page.env
+        volumes:
+            - ./conf/mask-override-page/config.json:/app/public/config.json

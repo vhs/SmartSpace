@@ -9,11 +9,17 @@
 !data/
 !data/**/
 
+!docker/
+!docker/*.yml
+
 !env/
 !env/**/
 
 !logs/
 !logs/**/
+
+!scripts/
+!scripts/*.sh
 
 !secrets/
 !secrets/**/
@@ -23,7 +29,5 @@
 
 !check.sh
 !deploy.sh
-
-!docker-compose.yml
 
 !README.md

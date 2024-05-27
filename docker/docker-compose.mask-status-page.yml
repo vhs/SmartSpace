@@ -1,0 +1,12 @@
+services:
+    mask-status-page:
+        image: vanhack/mqtt-status-page:latest
+        depends_on:
+            - mosquitto-public
+        restart: always
+        networks:
+            - default
+        env_file:
+            - ./env/mask-status-page.env
+        volumes:
+            - ./conf/mask-status-page/config.json:/usr/share/nginx/html/config.json:ro

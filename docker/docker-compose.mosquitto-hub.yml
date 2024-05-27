@@ -1,0 +1,13 @@
+services:
+    mosquitto-hub:
+        image: eclipse-mosquitto:2.0
+        container_name: mosquitto-hub
+        restart: always
+        networks:
+            - mosquitto
+        env_file:
+            - ./env/mosquitto-hub.env
+        volumes:
+            - ./conf/mosquitto-hub/mosquitto.conf:/mosquitto/config/mosquitto.conf
+            - ./data/mosquitto-hub:/mosquitto/data
+            - ./logs/mosquitto-hub:/mosquitto/log

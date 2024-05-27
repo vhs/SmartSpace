@@ -1,0 +1,19 @@
+services:
+    mosquitto-trust:
+        image: eclipse-mosquitto:2.0
+        container_name: mosquitto-trust
+        depends_on:
+            - mosquitto-hub
+        restart: always
+        networks:
+            - default
+            - mosquitto
+        expose:
+            - 1883
+            - 9001
+        env_file:
+            - ./env/mosquitto-trust.env
+        volumes:
+            - ./conf/mosquitto-trust/mosquitto.conf:/mosquitto/config/mosquitto.conf
+            - ./data/mosquitto-trust:/mosquitto/data
+            - ./logs/mosquitto-trust:/mosquitto/log

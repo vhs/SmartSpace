@@ -1,0 +1,12 @@
+services:
+    sip-monitor:
+        image: tyisi/sip-to-mqtt
+        depends_on:
+            - mosquitto-trust
+        restart: always
+        networks:
+            - default
+        ports:
+            - 5060:5060
+        env_file:
+            - ./env/sip-monitor.env

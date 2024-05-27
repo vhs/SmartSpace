@@ -1,0 +1,10 @@
+services:
+    easyappointments-mask-monitor:
+        image: vanhack/easyappointments-category-monitor
+        depends_on:
+            - mosquitto-trust
+        restart: always
+        networks:
+            - default
+        volumes:
+            - ./conf/easyappointments-mask-monitor/config.json:/app/config.json:ro

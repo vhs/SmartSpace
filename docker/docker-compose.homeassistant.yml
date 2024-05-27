@@ -1,0 +1,16 @@
+services:
+    homeassistant:
+        image: homeassistant/home-assistant
+        depends_on:
+            - mosquitto-trust
+            - influxdb
+        restart: always
+        networks:
+            - default
+        ports:
+            - 8123:8123
+        env_file:
+            - ./env/homeassistant.env
+        volumes:
+            - ./data/home-assistant:/config
+            - /etc/localtime:/etc/localtime:ro

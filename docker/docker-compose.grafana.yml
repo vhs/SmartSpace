@@ -1,0 +1,16 @@
+services:
+    grafana:
+        image: grafana/grafana
+        depends_on:
+            - influxdb
+        restart: always
+        networks:
+            - default
+        env_file:
+            - ./env/grafana.env
+        environment:
+            - GF_SECURITY_ADMIN_PASSWORD__FILE=/run/secrets/grafana_admin_password
+        secrets:
+            - grafana_admin_password
+        volumes:
+            - ./data/grafana:/var/lib/grafana

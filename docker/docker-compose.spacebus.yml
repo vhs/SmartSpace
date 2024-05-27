@@ -1,0 +1,12 @@
+services:
+    spacebus:
+        image: vanhack/spacebus:latest
+        depends_on:
+            - mosquitto-public
+        restart: always
+        networks:
+            - default
+        env_file:
+            - ./env/spacebus.env
+        volumes:
+            - ./conf/spacebus/config.json:/usr/share/nginx/html/config.json:ro

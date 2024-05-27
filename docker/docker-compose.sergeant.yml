@@ -1,0 +1,10 @@
+services:
+    sergeant:
+        image: vanhack/smartspace-sergeant
+        depends_on:
+            - mosquitto-trust
+        restart: always
+        networks:
+            - default
+        env_file:
+            - ./env/sergeant.env

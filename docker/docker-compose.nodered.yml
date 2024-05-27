@@ -1,0 +1,15 @@
+services:
+    nodered:
+        image: tyisi/node-red-docker-bootstrap
+        depends_on:
+            - mosquitto-trust
+        restart: always
+        networks:
+            - default
+        ports:
+            - 1880:1880
+        env_file:
+            - ./env/nodered.env
+        volumes:
+            - ./conf/nodered:/bootstrap/conf/
+            - ./data/nodered:/data
