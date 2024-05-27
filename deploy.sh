@@ -9,7 +9,7 @@ echo "$(date): Deploying vhs-smartspace..."
 ./scripts/lint.sh
 
 echo "$(date): Updating containers..."
-docker compose pull 2>&1 | while read -r LOGLINE; do echo "$(date): $LOGLINE"; done
+docker compose pull -q 2>&1 | while read -r LOGLINE; do echo "$(date): $LOGLINE"; done
 docker compose up --remove-orphans -d 2>&1 | while read -r LOGLINE; do echo "$(date): $LOGLINE"; done
 
 echo "$(date): Done!"
