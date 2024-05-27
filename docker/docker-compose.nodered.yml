@@ -6,10 +6,13 @@ services:
         restart: always
         networks:
             - default
-        ports:
-            - 1880:1880
         env_file:
             - ./env/nodered.env
         volumes:
             - ./conf/nodered:/bootstrap/conf/
             - ./data/nodered:/data
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.nodered.entryPoints=web
+            - traefik.http.routers.nodered.rule=Host(`nodered.brain.venables.vanhack.ca`)
+            - traefik.http.services.nodered.loadbalancer.server.port=1880

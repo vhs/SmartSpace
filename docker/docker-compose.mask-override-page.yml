@@ -10,3 +10,7 @@ services:
             - ./env/mask-override-page.env
         volumes:
             - ./conf/mask-override-page/config.json:/app/public/config.json
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.mask-override-page.entryPoints=web
+            - traefik.http.routers.mask-override-page.rule=Host(`masks.venables.vanhack.ca`)

@@ -10,3 +10,7 @@ services:
             - ./env/mask-status-page.env
         volumes:
             - ./conf/mask-status-page/config.json:/usr/share/nginx/html/config.json:ro
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.mask-status-page.entryPoints=web
+            - traefik.http.routers.mask-status-page.rule=Host(`mask-status.venables.vanhack.ca`)

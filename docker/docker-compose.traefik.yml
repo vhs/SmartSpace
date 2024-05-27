@@ -1,0 +1,42 @@
+services:
+    traefik:
+        image: "traefik:v2.10"
+        container_name: traefik
+        restart: always
+        depends_on:
+            - traefik-docker-proxy
+        command:
+            - "--log.level=DEBUG"
+            - "--providers.docker=true"
+            - "--providers.docker.endpoint=tcp://traefik-docker-proxy:2375"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.web.address=:80"
+            - "--accesslog=true"
+            - "--serverstransport.insecureskipverify=true"
+        environment:
+            - DOCKER_HOST=traefik-docker-proxy:2375
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "10m"
+                max-file: "1"
+        networks:
+            - default
+            - traefik-docker-proxy
+        ports:
+            - 80:80
+            - 443:443
+
+    traefik-docker-proxy:
+        image: tecnativa/docker-socket-proxy
+        restart: always
+        environment:
+            - CONTAINERS=1
+        networks:
+            - traefik-docker-proxy
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ./data/traefik-docker-proxy/haproxy:/var/lib/haproxy
+
+networks:
+    traefik-docker-proxy:

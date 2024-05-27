@@ -4,10 +4,12 @@ services:
         restart: always
         networks:
             - default
-        ports:
-            - 9000:9000
         env_file:
             - ./env/portainer.env
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
             - ./data/portainer:/data
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.portainer.entryPoints=web
+            - traefik.http.routers.portainer.rule=Host(`portainer.brain.venables.vanhack.ca`)

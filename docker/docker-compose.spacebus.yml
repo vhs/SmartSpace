@@ -10,3 +10,7 @@ services:
             - ./env/spacebus.env
         volumes:
             - ./conf/spacebus/config.json:/usr/share/nginx/html/config.json:ro
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.spacebus.entryPoints=web
+            - traefik.http.routers.spacebus.rule=Host(`spacebus.venables.vanhack.ca`)

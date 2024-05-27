@@ -14,3 +14,7 @@ services:
             - grafana_admin_password
         volumes:
             - ./data/grafana:/var/lib/grafana
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.grafana.entryPoints=web
+            - traefik.http.routers.grafana.rule=Host(`grafana.venables.vanhack.ca`)
