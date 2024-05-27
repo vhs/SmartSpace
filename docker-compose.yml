@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
     mosquitto-hub:
         image: eclipse-mosquitto:2.0
