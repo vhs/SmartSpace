@@ -1,0 +1,23 @@
+services:
+    woodshopdustplc-data-bridge-stats:
+        container_name: woodshopdustplc-data-bridge-stats
+
+        image: telegraf:alpine
+
+        env_file:
+            - ./env/woodshopdustplc-data-bridge-common.env
+            - ./env/woodshopdustplc-data-bridge-stats.env
+
+        restart: always
+
+        secrets:
+            - source: woodshopdustplc_data_bridge_stats_token
+              target: influxdb_token
+
+        volumes:
+            - ./conf/woodshopdustplc-data-bridge/config.toml:/etc/telegraf/telegraf.conf:ro
+            - ./data/woodshopdustplc-data-bridge-stats/:/data/telegraf/:rw
+
+secrets:
+    woodshopdustplc_data_bridge_stats_token:
+        file: ./secrets/woodshopdustplc_data_bridge_stats_token
