@@ -1,6 +1,6 @@
 services:
     grafana:
-        image: grafana/grafana
+        image: grafana/grafana:11.0.0
         depends_on:
             - influxdb
         restart: always
