@@ -14,5 +14,5 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.nodered.entryPoints=web
-            - traefik.http.routers.nodered.rule=Host(`nodered.brain.venables.vanhack.ca`)
+            - traefik.http.routers.nodered.rule=Host(`nodered.smartspace.vanhack.ca`)
             - traefik.http.services.nodered.loadbalancer.server.port=1880

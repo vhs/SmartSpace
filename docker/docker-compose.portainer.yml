@@ -12,4 +12,4 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.portainer.entryPoints=web
-            - traefik.http.routers.portainer.rule=Host(`portainer.brain.venables.vanhack.ca`)
+            - traefik.http.routers.portainer.rule=Host(`portainer.smartspace.vanhack.ca`)

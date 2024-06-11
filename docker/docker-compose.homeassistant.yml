@@ -17,5 +17,5 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.hass.entryPoints=web
-            - traefik.http.routers.hass.rule=Host(`hass.brain.venables.vanhack.ca`)
+            - traefik.http.routers.hass.rule=Host(`hass.smartspace.vanhack.ca`)
             - traefik.http.services.hass.loadbalancer.server.port=8123

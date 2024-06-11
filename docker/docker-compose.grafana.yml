@@ -17,4 +17,4 @@ services:
         labels:
             - traefik.enable=true
             - traefik.http.routers.grafana.entryPoints=web
-            - traefik.http.routers.grafana.rule=Host(`grafana.venables.vanhack.ca`)
+            - traefik.http.routers.grafana.rule=Host(`grafana.smartspace.vanhack.ca`)
