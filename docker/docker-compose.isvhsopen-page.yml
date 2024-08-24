@@ -1,0 +1,16 @@
+services:
+    isvhsopen-page:
+        image: vanhack/mqtt-web-timer:latest
+        depends_on:
+            - mosquitto-trust
+        restart: always
+        networks:
+            - default
+        env_file:
+            - ./env/isvhsopen-page.env
+        volumes:
+            - ./conf/isvhsopen-page/config.json:/app/public/config.json
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.isvhsopen-page.entryPoints=web
+            - traefik.http.routers.isvhsopen-page.rule=Host(`isvhsopen.venables.vanhack.ca`)
