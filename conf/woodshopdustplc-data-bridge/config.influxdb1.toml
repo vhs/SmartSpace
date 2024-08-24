@@ -1,0 +1,43 @@
+[[secretstores.docker]]
+id = "docker_secretstore"
+
+[[inputs.mqtt_consumer]]
+servers = ["${MQTT_URI}"]
+
+topics = ["/projects/woodshopdustplc/+/SENSOR"]
+
+max_undelivered_messages = 1000
+
+data_format = "json_v2"
+
+[[inputs.mqtt_consumer.topic_parsing]]
+topic = "/projects/woodshopdustplc/+/SENSOR"
+measurement = "/_/_/sensor/_"
+
+[[inputs.mqtt_consumer.json_v2]]
+
+[[inputs.mqtt_consumer.json_v2.object]]
+path = "@this"
+disable_prepend_keys = true
+tags = ["id", "type"]
+
+[[processors.converter]]
+
+[processors.converter.fields]
+measurement = []
+tag = []
+string = []
+integer = []
+unsigned = []
+boolean = []
+float = ["Temperature", "Humidity", "Pressure", "PM2.5", "DewPoint"]
+
+[[outputs.file]]
+# files = ["stdout", "/data/telegraf/metrics.out"]
+files = ["stdout"]
+
+[[outputs.influxdb]]
+urls = ["${INFLUXDB_URI}"]
+database = "${INFLUXDB_BUCKET}"
+username = "${INFLUXDB_USER}"
+password = "@{docker_secretstore:influxdb_password}"

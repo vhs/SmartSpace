@@ -1,3 +1,4 @@
 *
 !.gitignore
-!config.toml
+!config.influxdb1.toml
+!config.influxdb2.toml

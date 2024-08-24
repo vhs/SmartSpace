@@ -11,13 +11,13 @@ services:
         restart: always
 
         secrets:
-            - source: woodshopdustplc_data_bridge_stats_token
-              target: influxdb_token
+            - source: woodshopdustplc_data_bridge_stats_password
+              target: influxdb_password
 
         volumes:
-            - ./conf/woodshopdustplc-data-bridge/config.toml:/etc/telegraf/telegraf.conf:ro
+            - ./conf/woodshopdustplc-data-bridge/config.influxdb1.toml:/etc/telegraf/telegraf.conf:ro
             - ./data/woodshopdustplc-data-bridge-stats/:/data/telegraf/:rw
 
 secrets:
-    woodshopdustplc_data_bridge_stats_token:
-        file: ./secrets/woodshopdustplc_data_bridge_stats_token
+    woodshopdustplc_data_bridge_stats_password:
+        file: ./secrets/woodshopdustplc_data_bridge_stats_password

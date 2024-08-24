@@ -15,7 +15,7 @@ services:
               target: influxdb_token
 
         volumes:
-            - ./conf/woodshopdustplc-data-bridge/config.toml:/etc/telegraf/telegraf.conf:ro
+            - ./conf/woodshopdustplc-data-bridge/config.influxdb2.toml:/etc/telegraf/telegraf.conf:ro
             - ./data/woodshopdustplc-data-bridge-local/:/data/telegraf/:rw
 
 secrets:
