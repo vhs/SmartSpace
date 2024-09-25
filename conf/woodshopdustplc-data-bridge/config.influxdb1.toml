@@ -38,6 +38,7 @@ files = ["stdout"]
 
 [[outputs.influxdb]]
 urls = ["${INFLUXDB_URI}"]
+skip_database_creation = true
 database = "${INFLUXDB_BUCKET}"
 username = "${INFLUXDB_USER}"
 password = "@{docker_secretstore:influxdb_password}"
