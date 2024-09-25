@@ -1,0 +1,16 @@
+services:
+    influxdb:
+        image: influxdb:1.8
+        restart: always
+        networks:
+            - default
+        env_file:
+            - ./env/spacestats.env
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.spacestats.entryPoints=web
+            - traefik.http.routers.spacestats.rule=Host(`stats.smartspace.vanhack.ca`)
+            - traefik.http.services.hass.loadbalancer.server.port=8086
+        volumes:
+            - ./conf/spacestats/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+            - ./data/spacestats:/var/lib/influxdb
