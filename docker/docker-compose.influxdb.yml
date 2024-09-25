@@ -4,10 +4,6 @@ services:
         restart: always
         networks:
             - default
-        ports:
-            - 8086:8086
-            - 8083:8083
-            - 2003:2003
         env_file:
             - ./env/influxdb.env
         volumes:
