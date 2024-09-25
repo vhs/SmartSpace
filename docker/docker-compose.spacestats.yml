@@ -1,5 +1,5 @@
 services:
-    influxdb:
+    spacestats:
         image: influxdb:1.8
         restart: always
         networks:
