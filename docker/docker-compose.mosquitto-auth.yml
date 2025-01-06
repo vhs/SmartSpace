@@ -1,0 +1,20 @@
+services:
+    mosquitto-auth:
+        image: eclipse-mosquitto:2.0
+        container_name: mosquitto-auth
+        depends_on:
+            - mosquitto-hub
+        restart: always
+        networks:
+            - default
+            - mosquitto
+        ports:
+            - 11883:1883
+            - 19001:9001
+        env_file:
+            - ./env/mosquitto-auth.env
+        volumes:
+            - ./conf/mosquitto-auth/mosquitto.conf:/mosquitto/config/mosquitto.conf
+            - ./conf/mosquitto-auth/dynamic-security.json:/mosquitto/config/dynamic-security.json
+            - ./data/mosquitto-auth:/mosquitto/data
+            - ./logs/mosquitto-auth:/mosquitto/log

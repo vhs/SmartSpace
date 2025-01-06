@@ -51,3 +51,8 @@ if [ -f docker-compose.override.yml ] && [ "$(grep -E '^COMPOSE_FILE=.*docker-co
 
     perl -pe 's/(COMPOSE_FILE=.+)/$1:docker-compose.override.yml/g' -i .env
 fi
+
+if [ ! -f conf/mosquitto-auth/dynamic-security.json ]; then
+    echo "$(date): Please generate missing conf/mosquitto-auth/dynamic-security.json file manually! Bailing..."
+    exit 254
+fi
