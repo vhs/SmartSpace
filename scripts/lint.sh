@@ -1,8 +1,22 @@
 #!/bin/sh
 
+set -e
+
 cd "$(dirname "$(realpath "$0")")/../" || exit 255
 
-if [ "$(find env -type f -name '*.sample.env' | wc -l)" != "$(find env -type f -name '*.env' | grep -E -c -vw sample)" ]; then
+if [ "$(find conf -type f -name '*sample*' | wc -l)" != "$(find conf -type f -name '*sample*' | sed 's:\.sample::g' | xargs ls 2>/dev/null | wc -l)" ]; then
+    echo "$(date): Copying missing conf files"
+    find conf -type f -name '*sample*' | while read -r SAMPLECONF; do
+        CONFFILE=$(echo "${SAMPLECONF}" | sed 's:\.sample::g')
+
+        if [ ! -f "$CONFFILE" ]; then
+            echo "$(date): Copying $SAMPLECONF to ${CONFFILE}"
+            cp "${SAMPLECONF}" "${CONFFILE}"
+        fi
+    done
+fi
+
+if [ "$(find env -type f -name '*.sample.env' | wc -l)" != "$(find env -type f -name '*.env' | grep -v -E 'woodshopdustplc-data-bridge-(local|stats)' | grep -E -c -vw sample)" ]; then
     echo "$(date): Copying missing .env files"
     find env -type f -name '*.sample.env' | while read -r SAMPLEENV; do
         ENVFILE=$(echo "${SAMPLEENV}" | sed 's/\.sample\.env/.env/g')
