@@ -16,7 +16,7 @@ if [ "$(find conf -type f -name '*sample*' | wc -l)" != "$(find conf -type f -na
     done
 fi
 
-if [ "$(find env -type f -name '*.sample.env' | wc -l)" != "$(find env -type f -name '*.env' | grep -v -E 'woodshopdustplc-data-bridge-(local|stats)' | grep -E -c -vw sample)" ]; then
+if [ "$(find env -type f -name '*.sample.env' | wc -l)" != "$(find env -type f -name '*.env' | grep -v -E 'woodshopdustplc-data-bridge-(local|stats|destination)' | grep -E -c -vw sample)" ]; then
     echo "$(date): Copying missing .env files"
     find env -type f -name '*.sample.env' | while read -r SAMPLEENV; do
         ENVFILE=$(echo "${SAMPLEENV}" | sed 's/\.sample\.env/.env/g')
